@@ -3,6 +3,7 @@ import { useEffect,useRef } from 'react';
 import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
 import {unAuthUser,authUser} from "../redux/UserAuthentication"
+import {toaster} from "../components/ui/toaster.jsx"
 
 function Loginpage() {
   
@@ -67,14 +68,20 @@ function Loginpage() {
       dispatch(authUser())
       navigate("/details/student")
     }else{
-      return
+      toaster.error({
+        title: "Password Incorrect",
+        action: {
+          label: "Undo",
+          onClick: () => console.log("Undo"),
+        },
+      })
     }
 
     
     setError('');
   };
 
-  const handleChangePassword = () => {
+  const handleChangePassword = async() => {
 
     if (currentPassword.length < 6 || newPassword.length < 6) {
       setError('Passwords must be at least 6 characters');
@@ -86,9 +93,44 @@ function Loginpage() {
     }
 
     console.log('Changing password');
+
+    console.log(currentPassword)
+    console.log(newPassword)
+
+   const response = await fetch("http://localhost:8080/change/password",{
+    method:"POST",
+    headers:{
+      'Content-Type':'application/json'
+    },
+    body:JSON.stringify({
+      newPassword:newPassword,
+      oldPassword:currentPassword
+    })
+   })
+
+   if(response.ok){
+        toaster.success({
+          title: "Password updated :)",
+          action: {
+            label: "Undo",
+            onClick: () => console.log("Undo"),
+          },
+        })
+   }else{
+    toaster.error({
+      title: "Incorrect Password",
+      action: {
+        label: "Undo",
+        onClick: () => console.log("Undo"),
+      },
+    })
+   }
+
     setError('');
     setCurrentPassword('');
     setNewPassword('');
+
+
   };
 
   return (

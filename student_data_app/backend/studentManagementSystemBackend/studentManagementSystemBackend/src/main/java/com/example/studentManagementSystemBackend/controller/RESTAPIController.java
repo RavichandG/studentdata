@@ -51,6 +51,23 @@ public class RESTAPIController {
           }
     }
 
+    @PostMapping("/change/password")
+    public ResponseEntity signUpStudent(@RequestBody NewPasswordDTO newPasswordDTO){
+        System.out.println(newPasswordDTO.getOldPassword());
+        System.out.println(newPasswordDTO.getNewPassword());
+
+        if(passwordEncoder.matches(newPasswordDTO.getOldPassword(),password)){
+
+           password = passwordEncoder.encode(newPasswordDTO.getNewPassword());
+
+            return ResponseEntity.status(HttpStatus.OK).build();
+
+        }else{
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+    }
+
     @GetMapping("/check")
     public ResponseEntity checkAuthentication(){
         Object userAuthentication = SecurityContextHolder.getContext().getAuthentication().getPrincipal();

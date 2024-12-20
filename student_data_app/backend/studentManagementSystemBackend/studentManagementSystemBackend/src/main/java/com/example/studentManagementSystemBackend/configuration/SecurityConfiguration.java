@@ -31,7 +31,8 @@ public class SecurityConfiguration {
                         .requestMatchers("/student/get/{id}").authenticated()
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/login/change").permitAll()
-                           .requestMatchers("/check").permitAll()).build();
+                           .requestMatchers("/check").permitAll()
+                        .requestMatchers("/change/password").permitAll()).build();
     }
     @Bean
     public PasswordEncoder passwordEncoder(){
